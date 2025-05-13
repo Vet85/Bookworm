@@ -11,13 +11,14 @@ struct AddBookView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
-    @State private var title = ""
+    @State private var title = "" 
     @State private var author = ""
     @State private var rating = 3
-    @State private var genre = "Fantasy"
+    @State private var genre = "Unknown"
     @State private var review = ""
+    @State private var date = Date.now
     
-    let genres = ["Fantasy", "Horror", "Kids", "Poetry", "Romance", "Thriller"]
+    let genres = ["Fantasy", "Horror", "Kids", "Poetry", "Romance", "Thriller", "Unknown"]
     
     var body: some View {
         NavigationStack {
@@ -39,12 +40,14 @@ struct AddBookView: View {
                 }
                 Section {
                     Button("Save") {
-                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating)
+                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating, date: .now)
                         modelContext.insert(newBook)
+                      //  try? modelContext.save()
                         
                         dismiss()
                     }
-                }
+                 }
+                .disabled(author.isEmpty || title.isEmpty)
             }
             .navigationTitle("Add Book")
         }
